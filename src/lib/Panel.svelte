@@ -12,7 +12,7 @@
 
     const result = await fetch("http://localhost:3000/message", {
       method: "post",
-      body: JSON.stringify({ name: name, message: content }),
+      body: JSON.stringify({ name: name || "未知用户", message: content }),
       headers: {
         "Content-Type": "application/json"
       }
