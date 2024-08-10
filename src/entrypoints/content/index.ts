@@ -7,13 +7,9 @@ export default defineContentScript({
   cssInjectionMode: "ui",
 
   async main(ctx) {
-    browser.runtime.onMessage.addListener(async (message) => {
-      console.log("Content script recieved message:", message)
-      return Math.random()
-    })
     // 3. Define your UI
     const ui = await createShadowRootUi(ctx, {
-      name: "example-ui",
+      name: "ball-ui",
       position: "inline",
       onMount: (container) => {
         // Create the Svelte app inside the UI container

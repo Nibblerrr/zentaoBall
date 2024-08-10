@@ -1,40 +1,45 @@
 <script lang="ts">
-  import svelteLogo from "../../assets/svelte.svg"
-  import Counter from "../../lib/Counter.svelte"
+  import Panel from "../../lib/Panel.svelte"
 </script>
 
 <main>
-  <div>
-    <a href="https://wxt.dev" target="_blank" rel="noreferrer">
-      <img src="/wxt.svg" class="logo" alt="WXT Logo" />
+  <div class="imgContainer">
+    <a href="https://github.com/Nibblerrr" target="_blank" rel="noreferrer">
+      <img src="/nibbler.png" class="logo" alt="my Logo" />
     </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
+    <div class="text">点击头像查看代码</div>
   </div>
-  <h1>WXT + Svelte</h1>
 
   <div class="card">
-    <Counter />
+    <Panel />
   </div>
-
-  <p class="read-the-docs">Click on the WXT and Svelte logos to learn more</p>
 </main>
 
 <style>
+  .imgContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  }
+
+  .text {
+    font-size: 0.8em;
+    color: #74796f;
+    font-family: "poppins", sans-serif;
+    margin-bottom: 5px;
+  }
+
   .logo {
     height: 6em;
-    padding: 1.5em;
+    padding: 0.5em;
     will-change: filter;
     transition: filter 300ms;
+    border-radius: 50%;
   }
   .logo:hover {
-    filter: drop-shadow(0 0 2em #54bc4ae0);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
+    filter: drop-shadow(0 0 2em #74796fe3);
   }
 </style>
