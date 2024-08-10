@@ -1,5 +1,5 @@
 <script lang="ts">
-  import TaskTable from "../../lib/TaskTable.svelte"
+  import TaskTable from "../../lib/TaskTable.svelte";
 </script>
 
 <main class="app">
@@ -15,10 +15,7 @@
 
     font-size: 15px;
     pointer-events: none;
-
     font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-
-    color-scheme: light dark;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;

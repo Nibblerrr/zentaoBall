@@ -1,4 +1,4 @@
-import { defineConfig } from "wxt"
+import { defineConfig } from "wxt";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -11,18 +11,19 @@ export default defineConfig({
     permissions: ["storage", "cookies"],
     host_permissions: [
       "http://project.gsitcloud.com/*",
-      "http://172.20.41.50:3000/*"
-    ]
+      "http://172.20.41.50:3000/*",
+    ],
   },
   browser: "chromium",
   dev: {
     server: {
-      port: 5000
-    }
+      port: 5000,
+    },
   },
   vite: () => ({
     esbuild: {
-      drop: ["console", "debugger"]
-    }
-  })
-})
+      drop:
+        process.env.NODE_ENV === "production" ? ["console", "debugger"] : [],
+    },
+  }),
+});

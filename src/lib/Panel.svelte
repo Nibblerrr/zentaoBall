@@ -1,37 +1,34 @@
 <script lang="ts">
-  enum Tip {
-    origin = "提交您的Bug反馈、建议或者想对我说的话",
-    success = "发送成功!!!",
-    error = "发送失败"
-  }
-  let content: string = ""
-  let placeholder: string = Tip.origin
+  import { Tip } from "@/const";
+
+  let content: string = "";
+  let placeholder: string = Tip.origin;
 
   const increment = async () => {
     const cookies = await browser.cookies.getAll({
-      domain: "project.gsitcloud.com"
-    })
+      domain: "project.gsitcloud.com",
+    });
 
-    console.log(cookies)
+    console.log(cookies);
 
-    const name = cookies.find((cookie) => cookie.name === "za")?.value
+    const name = cookies.find((cookie) => cookie.name === "za")?.value;
 
     const result = await fetch("http://172.20.41.50:3000/message", {
       method: "post",
       body: JSON.stringify({ name: name || "未知用户", message: content }),
       headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    const res = await result.json()
-    console.log(res)
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await result.json();
+    console.log(res);
     if (res.code === 200) {
-      content = ""
-      placeholder = Tip.success
+      content = "";
+      placeholder = Tip.success;
     } else {
-      placeholder = Tip.error
+      placeholder = Tip.error;
     }
-  }
+  };
 </script>
 
 <div class="container">

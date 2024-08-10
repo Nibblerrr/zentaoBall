@@ -1,8 +1,10 @@
 // 1. Import the style
-import App from "./App.svelte"
+import { TaskStatus } from "@/const";
+import App from "./App.svelte";
 
 export default defineContentScript({
   matches: ["<all_urls>"],
+  excludeMatches: [TaskStatus.LOGIN],
   // 2. Set cssInjectionMode
   cssInjectionMode: "ui",
 
@@ -14,17 +16,17 @@ export default defineContentScript({
       onMount: (container) => {
         // Create the Svelte app inside the UI container
         const app = new App({
-          target: container
-        })
-        return app
+          target: container,
+        });
+        return app;
       },
       onRemove: (app) => {
         // Destroy the app when the UI is removed
-        app?.$destroy()
-      }
-    })
+        app?.$destroy();
+      },
+    });
 
     // 4. Mount the UI
-    ui.mount()
-  }
-})
+    ui.mount();
+  },
+});
