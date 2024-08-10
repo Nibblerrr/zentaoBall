@@ -1,5 +1,11 @@
 <script lang="ts">
+  enum Tip {
+    origin = "提交您的Bug反馈、建议或者想对我说的话",
+    success = "发送成功!!!",
+    error = "发送失败"
+  }
   let content: string = ""
+  let placeholder: string = Tip.origin
 
   const increment = async () => {
     const cookies = await browser.cookies.getAll({
@@ -10,14 +16,21 @@
 
     const name = cookies.find((cookie) => cookie.name === "za")?.value
 
-    const result = await fetch("http://localhost:3000/message", {
+    const result = await fetch("http://172.20.41.50:3000/message", {
       method: "post",
       body: JSON.stringify({ name: name || "未知用户", message: content }),
       headers: {
         "Content-Type": "application/json"
       }
     })
-    console.log(result)
+    const res = await result.json()
+    console.log(res)
+    if (res.code === 200) {
+      content = ""
+      placeholder = Tip.success
+    } else {
+      placeholder = Tip.error
+    }
   }
 </script>
 
@@ -28,7 +41,7 @@
     rows="5"
     cols="25"
     bind:value={content}
-    placeholder="提交您的Bug反馈、建议或者想对我说的话"
+    {placeholder}
   ></textarea>
 
   <button class="button" on:click={increment}> 发送 </button>

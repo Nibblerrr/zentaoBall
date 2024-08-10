@@ -11,7 +11,7 @@ export default defineConfig({
     permissions: ["storage", "cookies"],
     host_permissions: [
       "http://project.gsitcloud.com/*",
-      "http://localhost:3000/*"
+      "http://172.20.41.50:3000/*"
     ]
   },
   browser: "chromium",
@@ -22,7 +22,7 @@ export default defineConfig({
   },
   vite: () => ({
     esbuild: {
-      drop: ["debugger"]
+      drop: ["console", "debugger"]
     }
   })
 })

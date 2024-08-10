@@ -1,12 +1,13 @@
 {
-  "name": "wxt-svelte-starter",
-  "description": "manifest.json description",
+  "name": "zentao-ball",
+  "description": "快速获取禅道任务信息",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
     "build": "wxt build",
+    "build:analyze": "wxt build --analyze",
     "build:firefox": "wxt build -b firefox",
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",

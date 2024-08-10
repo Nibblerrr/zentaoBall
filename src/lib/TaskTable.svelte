@@ -166,7 +166,7 @@
     class="circle"
     on:click={onCircleClick}
     on:contextmenu|preventDefault={onRightClick}
-    title="左键为未完成，右键为已完成"
+    title="左键为未完成，右键为已完成，扩展面板可提供反馈"
   >
     T
   </button>
@@ -280,7 +280,8 @@
 
   .task-container {
     max-height: 250px;
-    overflow: scroll;
+    overflow: auto; /* 使用auto而不是scroll，以便在不需要滚动时自动隐藏滚动条 */
+    scrollbar-width: none; /* 对于Firefox */
   }
 
   .task-container::-webkit-scrollbar {
