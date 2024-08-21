@@ -1,38 +1,40 @@
 <script lang="ts">
-  import { storage } from "wxt/storage";
-  import { onMount } from "svelte";
-  import { scale } from "svelte/transition";
-  import { TaskStatus } from "@/const";
+  import { storage } from "wxt/storage"
+  import { onMount } from "svelte"
+  import { scale } from "svelte/transition"
+  import { TaskStatus } from "@/const"
+  import { test } from "@/mock"
 
-  let isOpenLogin = false;
-  let login = false;
-  let tasks: any[] = [];
+  let isOpenLogin = false
+  let login = false
+  let tasks: any[] = []
   const getTask = async (url: string) => {
-    const result = await browser.runtime.sendMessage({ url });
-    console.log(result);
+    if (testMode) return test
+    const result = await browser.runtime.sendMessage({ url })
+    console.log(result)
 
     if (result.includes("user-login")) {
-      login = false;
+      login = false
       if (!isOpenLogin) {
-        isOpenLogin = true;
-        window.open(TaskStatus.LOGIN);
+        isOpenLogin = true
+        window.open(TaskStatus.LOGIN)
       }
-      return [];
+      return []
     }
-    login = true;
-    const list = parseTasks(result);
+    login = true
+    const list = parseTasks(result)
 
-    return list;
-  };
+    return list
+  }
 
   function parseTasks(htmlString: string) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlString, "text/html");
-    const tbody = doc.querySelector("#mainContent tbody");
-    const tasks: object[] = [];
-    if (tbody === null) return tasks;
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(htmlString, "text/html")
+    const tbody = doc.querySelector("#mainContent tbody")
+    const tasks: object[] = []
+    if (tbody === null) return tasks
     tbody!.querySelectorAll("tr").forEach((tr) => {
-      if (tr === null) return;
+      if (tr === null) return
       const task = {
         id: tr!.querySelector(".c-id div label + label")?.textContent?.trim(),
         priority: tr.querySelector(".c-pri .label-pri")?.textContent?.trim(),
@@ -50,116 +52,127 @@
         deadline: tr.querySelector(".c-date")?.textContent?.trim(),
         status: tr.querySelector(".c-status span")?.textContent?.trim(),
         actions: Array.from(tr.querySelectorAll(".c-actions a")).map((a) => {
-          const href = a.attributes.getNamedItem("href")?.value;
-          const title = a.attributes.getNamedItem("title")?.value;
-          return { href: TaskStatus.ORIGIN + href, title };
-        }),
-      };
-      tasks.push(task);
-    });
+          const href = a.attributes.getNamedItem("href")?.value
+          const title = a.attributes.getNamedItem("title")?.value
+          return { href: TaskStatus.ORIGIN + href, title }
+        })
+      }
+      tasks.push(task)
+    })
 
-    return tasks;
+    return tasks
   }
 
-  let isDragging = false;
-  let isClick = true;
-  let startX: number, startY: number;
+  let isDragging = false
+  let isClick = true
+  let startX: number, startY: number
   let offsetX = 0,
-    offsetY = 0;
+    offsetY = 0
 
   function onMouseDown(event: MouseEvent) {
-    console.log("down", event);
-    isClick = true;
-    isDragging = true;
-    startX = event.clientX - offsetX;
-    startY = event.clientY - offsetY;
-    console.log(startX, startY);
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
+    console.log("down", event)
+    isClick = true
+    isDragging = true
+    startX = event.clientX - offsetX
+    startY = event.clientY - offsetY
+    console.log(startX, startY)
+    window.addEventListener("mousemove", onMouseMove)
+    window.addEventListener("mouseup", onMouseUp)
   }
 
   function onMouseMove(event: MouseEvent) {
-    isClick = false;
-    console.log("move");
+    isClick = false
+    console.log("move")
     if (isDragging) {
-      offsetX = event.clientX - startX;
-      offsetY = event.clientY - startY;
+      offsetX = event.clientX - startX
+      offsetY = event.clientY - startY
     }
   }
 
   function onMouseUp(event: Event) {
-    console.log("up", isDragging);
-    isDragging = false;
-    window.removeEventListener("mousemove", onMouseMove);
-    window.removeEventListener("mouseup", onMouseUp);
+    console.log("up", isDragging)
+    isDragging = false
+    window.removeEventListener("mousemove", onMouseMove)
+    window.removeEventListener("mouseup", onMouseUp)
   }
 
-  let show = false;
+  let show = false
   async function onCircleClick(event: Event) {
-    console.log("click");
-    console.log(isDragging);
+    console.log("click")
+    console.log(isDragging)
     if (isClick) {
       if (!show) {
-        const list = await getTask(TaskStatus.DOING);
-        hasNewTask = false;
+        const list = await getTask(TaskStatus.DOING)
+        hasNewTask = false
 
-        tasks = list;
+        tasks = list
       }
-      show = !show;
+      show = !show
     }
   }
 
   async function onRightClick(event: Event) {
     if (isClick) {
       if (!show) {
-        const list = await getTask(TaskStatus.DONE);
-        hasNewTask = false;
+        const list = await getTask(TaskStatus.DONE)
+        hasNewTask = false
 
-        tasks = list;
+        tasks = list
       }
-      show = !show;
+      show = !show
     }
   }
 
-  let hasNewTask = false;
+  let hasNewTask = false
   const getDataAuto = async () => {
-    const list = await getTask(TaskStatus.DOING);
+    const list = await getTask(TaskStatus.DOING)
 
-    const oldTask = await getLocal("tasks");
-    console.log("!!!!!", oldTask);
+    const oldTask = await getLocal("tasks")
+    console.log("!!!!!", oldTask)
 
     if (
       oldTask == undefined ||
       (list.length && !arraysAreEqual(list, oldTask))
     ) {
-      console.log(list, tasks);
-      setLocal("tasks", list);
-      tasks = list;
-      hasNewTask = true;
+      console.log(list, tasks)
+      setLocal("tasks", list)
+      tasks = list
+      hasNewTask = true
     }
-  };
+  }
 
   const setLocal = async (key: string, list: object[]) => {
-    await storage.setItem<string>(`local:${key}`, JSON.stringify(list));
-  };
+    await storage.setItem<string>(`local:${key}`, JSON.stringify(list))
+  }
 
   const getLocal = async (key: string) => {
-    const list = (await storage.getItem<string>(`local:${key}`)) || "[]";
-    return JSON.parse(list);
-  };
+    const list = (await storage.getItem<string>(`local:${key}`)) || "[]"
+    return JSON.parse(list)
+  }
 
   function arraysAreEqual(array1: any, array2: any) {
     // 将数组序列化为字符串
-    const string1 = JSON.stringify(array1);
-    const string2 = JSON.stringify(array2);
+    const string1 = JSON.stringify(array1)
+    const string2 = JSON.stringify(array2)
 
     // 直接比较字符串
-    return string1 === string2;
+    return string1 === string2
   }
-
+  let testMode = false
   onMount(() => {
-    const interval = setInterval(getDataAuto, 1000 * 20);
-  });
+    const interval = setInterval(getDataAuto, 1000 * 20)
+    let pressNum = 0
+    window.onkeydown = (event: KeyboardEvent) => {
+      if (event.key === "t") {
+        pressNum++
+        if (pressNum === 8) {
+          alert("开启调试")
+          tasks = test
+          testMode = true
+        }
+      }
+    }
+  })
 </script>
 
 <div
